@@ -15,11 +15,12 @@ import mg.hei.thumbnail.PojaGenerated;
 @PojaGenerated
 public class LambdaHandler implements RequestStreamHandler {
   private static final SpringBootLambdaContainerHandler<HttpApiV2ProxyRequest, AwsProxyResponse>
-      handler;
+          handler;
 
   static {
     try {
       handler = SpringBootLambdaContainerHandler.getHttpApiV2ProxyHandler(PojaApplication.class);
+      handler.getContainerConfig().addBinaryContentTypes("multipart/form-data");
     } catch (ContainerInitializationException e) {
       throw new RuntimeException("Initialization of Spring Boot Application failed", e);
     }
@@ -27,7 +28,7 @@ public class LambdaHandler implements RequestStreamHandler {
 
   @Override
   public void handleRequest(InputStream input, OutputStream output, Context context)
-      throws IOException {
+          throws IOException {
     handler.proxyStream(input, output, context);
   }
 }
